@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
-    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     "users",
     "ads",
     "redoc",
@@ -74,7 +74,9 @@ WSGI_APPLICATION = "skymarket.wsgi.application"
 # TODO здесь мы настраиваем аутентификацию и пагинацию
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -86,8 +88,12 @@ DJOSER = {
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {'user_create': 'users.serializers'
+                                   '.UserRegistrationSerializer',
+                    'current_user': 'users.serializers.CurrentUserSerializer'},
+    'LOGIN_FIELD': 'email'
 }
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 

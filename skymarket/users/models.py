@@ -26,6 +26,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=UserRoles.choices,
                             default=UserRoles.USER,
                             verbose_name='Роль пользователя')
+    is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
