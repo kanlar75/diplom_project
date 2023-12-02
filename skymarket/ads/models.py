@@ -17,7 +17,7 @@ class Ad(models.Model):
                                       verbose_name='время публикации')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.title}'
 
     class Meta:
         verbose_name = 'объявление'
