@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, \
 urlpatterns = [
                   path("api/admin/", admin.site.urls),
                   path("api/redoc-tasks/", include("redoc.urls")),
-                  path("api/users/", include("users.urls")),
+                  path("api/", include("users.urls")),
                   path("api/ads/", include("ads.urls")),
                   path('api/token/', TokenObtainPairView.as_view()),
                   path('api/refresh/', TokenRefreshView.as_view()),

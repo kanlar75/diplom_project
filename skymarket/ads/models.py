@@ -5,16 +5,16 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Ad(models.Model):
-    title = models.CharField(max_length=50, verbose_name='название')
-    price = models.IntegerField(verbose_name='цена')
-    description = models.TextField(verbose_name='описание')
+    title = models.CharField(max_length=50, verbose_name='название', **NULLABLE)
+    price = models.IntegerField(verbose_name='цена',**NULLABLE)
+    description = models.TextField(verbose_name='описание', **NULLABLE)
     image = models.ImageField(upload_to='ads/', verbose_name='изображение',
                               **NULLABLE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              verbose_name='пользователь', **NULLABLE)
     created_at = models.DateTimeField(auto_now_add=True,
-                                      verbose_name='время публикации')
+                                      verbose_name='время публикации', **NULLABLE)
 
     def __str__(self):
         return f'{self.title}'
