@@ -9,10 +9,10 @@ User = get_user_model()
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["email", "password", "first_name", "last_name", "phone"]
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ["first_name", "last_name", "phone", "id", "email", "image"]
+        fields = ["first_name", "last_name", "phone", "id", "email", "image"]

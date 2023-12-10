@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from .managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
@@ -12,7 +12,7 @@ class UserRoles(models.TextChoices):
     ADMIN = 'admin', _('admin')  # Админ
 
 
-class User(AbstractUser):
+class User(AbstractBaseUser):
     username = None
     email = models.EmailField(max_length=250, unique=True,
                               verbose_name='Адрес электронной почты')
@@ -40,6 +40,14 @@ class User(AbstractUser):
     @property
     def is_user(self):
         return self.role == UserRoles.USER
+
+    @property
+    def is_superuser(self):
+        return self.is_admin
+
+    @property
+    def is_staff(self):
+        return self.is_admin
 
     def has_perm(self, perm, obj=None):
         return self.is_admin

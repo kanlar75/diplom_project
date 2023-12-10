@@ -1,21 +1,26 @@
 from rest_framework import serializers
 
-from ads.models import Comment, Ad
+from ads.models import Ad, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Comment
-        fields = ('user', 'text', 'ad',)
+        fields = '__all__'
 
 
 class AdSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Ad
-        fields = ('title', 'price', 'image', 'description', 'user',)
+        fields = '__all__'
 
 
 class AdDetailSerializer(serializers.ModelSerializer):
+    comment = CommentSerializer(many=True, read_only=True)
+
     class Meta:
         model = Ad
-        fields = ('title', 'price', 'image', 'description', 'user',)
+        fields = ('title', 'price', 'image', 'description', 'user', 'comment',)

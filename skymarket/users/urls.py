@@ -10,7 +10,7 @@ users_router = SimpleRouter()
 users_router.register("users", UserViewSet, basename="users")
 
 urlpatterns = [
-    path("", include(users_router.urls)),
+    path("api/", include(users_router.urls)),
 ]
 
 # GET "users/" — список профилей пользователей

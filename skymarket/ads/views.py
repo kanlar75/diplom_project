@@ -1,82 +1,97 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics
-from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets, generics
 
-from ads.models import Ad, Comment
-from ads.paginators import AdPagination, CommentPaginator
-from ads.permissions import IsOwner
-from ads.serializers import AdSerializer, CommentSerializer
+from .filters import MyModelFilter
+from .models import Ad, Comment
+from .paginators import AdPaginator
+from .permissions import IsOwner, IsAdmin
+from .serializers import AdSerializer, CommentSerializer, AdDetailSerializer
 
 
-# AD
+class AdViewSet(ModelViewSet):
+    """ ViewSet объявления """
 
-class AdCreateAPIView(generics.CreateAPIView):
+    default_serializer = AdSerializer
+    queryset = Ad.objects.all()
+    # filter_backends = [MyModelFilter]
+    # search_fields = ['title']
+
     serializer_class = AdSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_classes = {
+        "retrieve": AdDetailSerializer
+    }
+    pagination_class = AdPaginator
+
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action,
+                                           self.default_serializer)
 
     def perform_create(self, serializer):
-        new_ad = serializer.save()
-        new_ad.user = self.request.user
-        new_ad.save()
+        """ Создание нового объявление и установка автора """
+
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        """ Обновление (редактирование) объявления """
+
+        serializer.save(user=self.request.user)
+
+    def get_permissions(self):
+        """ Определяет права доступа в зависимости от выполняемого действия """
+
+        if self.action in ['retrieve', 'create']:
+            permission_classes = [IsAuthenticated]
+        elif self.action in ['destroy', 'update', 'partial_update']:
+            permission_classes = [IsOwner | IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
 
-class AdListAPIView(generics.ListAPIView):
-    serializer_class = AdSerializer
-    queryset = Ad.objects.all()
-    permission_classes = [IsAuthenticated]
-    # filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    # filterset_fields = ('price', 'user',)
-    # ordering_fields = ('title',)
-    # search_fields = ('title',)
-    pagination_class = AdPagination
+class CommentViewSet(viewsets.ModelViewSet):
+    """ ViewSet комментария """
 
-
-class AdRetrieveAPIView(generics.RetrieveAPIView):
-    serializer_class = AdSerializer
-    queryset = Ad.objects.all()
-    permission_classes = [IsAuthenticated]
-
-
-class AdUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = AdSerializer
-    queryset = Ad.objects.all()
-    permission_classes = [IsOwner, IsAuthenticated]
-
-
-class AdDestroyAPIView(generics.DestroyAPIView):
-    serializer_class = AdSerializer
-    queryset = Ad.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner]
-
-
-# COMMENT
-
-class CommentListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = CommentPaginator
-    ordering_fields = ('id', 'user',)
 
     def get_queryset(self):
-        ad_id = self.kwargs['ad_pk']
+        ad_id = self.kwargs['ads_pk']
         return Comment.objects.filter(ad_id=ad_id)
 
     def perform_create(self, serializer):
-        ad_id = self.kwargs['ad_pk']
+        """ Сохраняем пользователя, добавившего комментарий """
+
+        ad_id = self.kwargs['ads_pk']
         ad = Ad.objects.get(pk=ad_id)
-        new_comment = serializer.save(ad=ad)
-        new_comment.user = self.request.user
-        new_comment.save()
+        serializer.save(ad=ad, user=self.request.user)
+
+    def perform_update(self, serializer):
+        """ Обновление комментария """
+
+        serializer.save(user=self.request.user)
+
+    def get_permissions(self):
+        """ Определяет права доступа в зависимости от выполняемого действия """
+
+        if self.action in ['retrieve', 'create']:
+            permission_classes = [IsAuthenticated]
+        elif self.action in ['destroy', 'update', 'partial_update']:
+            permission_classes = [IsAuthenticated, IsOwner | IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
 
-class CommentUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner]
+class UserAdsListView(generics.ListAPIView):
+    """ Представление списка объявлений пользователя """
 
+    serializer_class = AdSerializer
+    permission_classes = [IsAuthenticated]
 
-class CommentDestroyAPIView(generics.DestroyAPIView):
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner]
+    def get_queryset(self):
+
+        if self.request.user.role == 'admin':
+            return Ad.objects.all()
+        return Ad.objects.filter(user=self.request.user)
+

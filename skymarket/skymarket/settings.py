@@ -1,10 +1,11 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env')
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -14,18 +15,20 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 ENV_TYPE = os.getenv('ENV_TYPE')
-if ENV_TYPE == 'local':
-    ALLOWED_HOSTS = ['127.0.0.1']
-else:
+if ENV_TYPE == 'local' or ENV_TYPE == 'docker':
+    ALLOWED_host = ['localhost', '127.0.0.1']
+elif ENV_TYPE == 'no_lockal' or ENV_TYPE == 'docker_deploy':
     ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 # Application definition
 
-# TODO здесь тоже нужно подключить Swagger и corsheaders
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
+    'djoser',
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -33,11 +36,14 @@ INSTALLED_APPS = [
 
     "rest_framework",
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    "django_filters",
+    'drf_yasg',
+    'corsheaders',
+    "redoc",
+
     "users",
     "ads",
-    "redoc",
-    'djoser',
-
 ]
 
 MIDDLEWARE = [
@@ -71,42 +77,75 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "skymarket.wsgi.application"
 
-# TODO здесь мы настраиваем аутентификацию и пагинацию
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
 }
-
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {'user_create': 'users.serializers'
-                                   '.UserRegistrationSerializer',
-                    'current_user': 'users.serializers.CurrentUserSerializer'},
-    'LOGIN_FIELD': 'email'
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+# DJOSER = {
+#     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+#     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': '#/activate/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'SERIALIZERS': {'user_create': 'users.serializers.UserRegistrationSerializer',
+#                     'current_user': 'users.serializers.CurrentUserSerializer'},
+#     'LOGIN_FIELD': 'email'
+# }
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SET_USERNAME_RETYPE": True,
+    "SET_PASSWORD_RETYPE": True,
+    "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+
+    "SERIALIZERS": {
+        "user_create": "users.serializers.UserRegistrationSerializer",
+        "user": "users.serializers.CurrentUserSerializer",
+        "current_user": "users.serializers.CurrentUserSerializer",
+        "user_delete": "users.serializers.CurrentUserSerializer",
+    },
+}
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# host и redis зависят от того где и как запускается проект смотри .env.sample
+# host зависит от того где и как запускается проект смотри .env.sample
 
 if ENV_TYPE == 'local':
     host = 'localhost'
-    redis_host = '127.0.0.1:6379'
 elif ENV_TYPE == 'docker':
     host = os.getenv('POSTGRES_HOST')
-    redis_host = 'redis:6379/0'
 else:
-    redis_host = 'redis:6379/0'
     host = ''
 
 DATABASES = {
@@ -140,6 +179,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.USER'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -159,9 +199,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "django_static")
 
 MEDIA_URL = "/django_media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "django_media")
-
-# CORS
-CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

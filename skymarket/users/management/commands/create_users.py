@@ -21,7 +21,7 @@ class Command(BaseCommand):
                             value == 'admin' or value == 'staff') else False,
                     is_active=True,
                 )
-                user.set_password('12345')
+                user.set_password('111')
                 user.save()
             else:
                 continue

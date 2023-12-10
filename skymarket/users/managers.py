@@ -2,19 +2,26 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 
+# from .models import UserRoles
+
 
 class UserManager(BaseUserManager):
     """ Собственный класс Manager """
 
-    def create_user(self, email, password=None):
-        """ Создает и возвращает пользователя с email, паролем """
+    def create_user(self, email, first_name=None, last_name=None, phone=None, password=None, is_active='True', role='user'):
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            role=role,
+            is_active=is_active
+        )
 
-        if email is None:
-            raise TypeError('Users must have an email address.')
-
-        user = self.model(email=self.normalize_email(email))
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
 
         return user
 
@@ -27,7 +34,14 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
-        user.role = 'admin'
         user.save()
 
         return user
+
+    @property
+    def is_admin(self):
+        return self.role == 'ADMIN'
+
+    @property
+    def is_user(self):
+        return self.role == 'USER'
