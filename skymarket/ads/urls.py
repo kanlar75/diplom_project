@@ -17,9 +17,9 @@ comments_router.register(
 )
 
 urlpatterns = [
-    path('api/ads/me/', UserAdsListView.as_view(), name='ads_user_list'),
-    path('api/', include(router.urls)),
-    path('api/', include(comments_router.urls)),
+    path('ads/me/', UserAdsListView.as_view(), name='ads_user_list'),
+    path('', include(router.urls)),
+    path('', include(comments_router.urls)),
 
 ]
 

@@ -35,7 +35,7 @@ class AdTestCase(APITestCase):
             "password": "08030803A"
         }
         user_response = self.client.post(
-            "/api/api/token/",
+            "/api/token/",
             data=data
         )
 
@@ -48,7 +48,7 @@ class AdTestCase(APITestCase):
 
         }
         response = self.client.post(
-            "/api/api/ads/",
+            "/api/ads/",
             data=data,
             headers={"Authorization": f"Bearer {token}"}
         )
@@ -66,7 +66,7 @@ class AdTestCase(APITestCase):
         Ad.objects.create(title="Test list", price=1000,
                           description="test list", user=user)
         response = self.client.get(
-            '/api/api/ads/'
+            '/api/ads/'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -81,7 +81,7 @@ class AdTestCase(APITestCase):
             "password": "08030803A"
         }
         user_response = self.client.post(
-            "/api/api/token/",
+            "/api/token/",
             data=data
         )
         token = user_response.data['access']
@@ -95,7 +95,7 @@ class AdTestCase(APITestCase):
         }
 
         response = self.client.patch(
-            '/api/api/ads/5/',
+            '/api/ads/5/',
             data=data,
             headers={"Authorization": f"Bearer {token}"}
         )
@@ -103,7 +103,7 @@ class AdTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.client.delete(
-            '/api/api/ads/5/',
+            '/api/ads/5/',
             headers={"Authorization": f"Bearer {token}"}
         )
 
@@ -147,7 +147,7 @@ class CommentTestCase(APITestCase):
             "password": "08030803A"
         }
         user_response = self.client.post(
-            "/api/api/token/",
+            "/api/token/",
             data=data
         )
 
@@ -158,7 +158,7 @@ class CommentTestCase(APITestCase):
             "text": "comment",
         }
         response = self.client.post(
-            "/api/api/ads/7/comments/",
+            "/api/ads/7/comments/",
             data=data,
             headers={"Authorization": f"Bearer {token}"}
         )
@@ -178,7 +178,7 @@ class CommentTestCase(APITestCase):
             "password": "08030803A"
         }
         user_response = self.client.post(
-            "/api/api/token/",
+            "/api/token/",
             data=data
         )
 
@@ -189,7 +189,7 @@ class CommentTestCase(APITestCase):
         Comment.objects.create(text="comment_list", ad=ad, user=user)
 
         response = self.client.get(
-            '/api/api/ads/8/comments/',
+            '/api/ads/8/comments/',
             headers={"Authorization": f"Bearer {token}"}
         )
 
@@ -206,7 +206,7 @@ class CommentTestCase(APITestCase):
             "password": "08030803A"
         }
         user_response = self.client.post(
-            "/api/api/token/",
+            "/api/token/",
             data=data
         )
 
@@ -221,7 +221,7 @@ class CommentTestCase(APITestCase):
         }
 
         response = self.client.patch(
-            '/api/api/ads/12/comments/3/',
+            '/api/ads/12/comments/3/',
             data=data,
             headers={"Authorization": f"Bearer {token}"}
         )
@@ -230,7 +230,7 @@ class CommentTestCase(APITestCase):
         self.assertEqual(response.json()["text"], "comment_update")
 
         self.client.delete(
-            '/api/api/ads/12/comments/3/',
+            '/api/ads/12/comments/3/',
             headers={"Authorization": f"Bearer {token}"}
         )
         queryset = Comment.objects.all()

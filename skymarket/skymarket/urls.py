@@ -29,9 +29,9 @@ urlpatterns = [
                   path("api/", include('users.urls')),
                   path('api/', include('ads.urls')),
 
-                  path('api/api/token/', TokenObtainPairView.as_view(),
+                  path('api/token/', TokenObtainPairView.as_view(),
                        name='token_obtain_pair'),
-                  path('api/api/refresh/', TokenRefreshView.as_view(),
+                  path('api/refresh/', TokenRefreshView.as_view(),
                        name='token_refresh'),
 
                   path('api/swagger/',
