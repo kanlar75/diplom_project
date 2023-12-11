@@ -89,4 +89,4 @@ login: admin@test.com password: 111
 
 Если у вас возникли вопросы или проблемы при использовании проекта, 
 свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий 
-в Issues проекта на GitHub https://github.com/kanlar75/course7/issues.
+в Issues проекта на GitHub https://github.com/kanlar75/diplom_project/issues.
