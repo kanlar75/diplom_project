@@ -2,7 +2,7 @@ from django.core.management import BaseCommand
 
 from users.models import User
 
-values = ['admin', 'staff', 'user1', 'user2', 'user3']
+values = ['admin', 'user1', 'user2', 'user3', 'user4']
 domain = 'test.com'
 
 
@@ -17,8 +17,7 @@ class Command(BaseCommand):
                     last_name=value.title(),
                     is_superuser=True if value == 'admin' else False,
                     role='admin' if value == 'admin' else 'user',
-                    is_staff=True if (
-                            value == 'admin' or value == 'staff') else False,
+                    is_staff=True if value == 'admin' else False,
                     is_active=True,
                 )
                 user.set_password('111')
