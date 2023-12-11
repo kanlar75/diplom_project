@@ -1,11 +1,14 @@
 import django_filters
-from .models import Ad
+
+from ads.models import Ad
 
 
-class MyModelFilter(django_filters.rest_framework.FilterSet):
-    find = django_filters.CharFilter(field_name="title",
-                                     lookup_expr="icontains", )
+class AdFilter(django_filters.rest_framework.FilterSet):
+    title = django_filters.CharFilter(field_name='title',
+                                      lookup_expr='icontains',
+                                      label='Filter ads by title containing '
+                                            'the specified text.')
 
     class Meta:
         model = Ad
-        fields = ("title", 'description', )
+        fields = ('title',)

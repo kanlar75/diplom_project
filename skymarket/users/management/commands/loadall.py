@@ -17,5 +17,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for fixture_filename in self.filenames:
             call_command(
-                self.loaddata_command, os.path.join(self.fixtures_dir, f"{fixture_filename}.json")
+                self.loaddata_command,
+                os.path.join(self.fixtures_dir, f"{fixture_filename}.json")
             )

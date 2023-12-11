@@ -2,13 +2,12 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 
-# from .models import UserRoles
-
 
 class UserManager(BaseUserManager):
     """ Собственный класс Manager """
 
-    def create_user(self, email, first_name=None, last_name=None, phone=None, password=None, is_active='True', role='user'):
+    def create_user(self, email, first_name=None, last_name=None, phone=None,
+                    password=None, is_active='True', role='user'):
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
@@ -40,8 +39,8 @@ class UserManager(BaseUserManager):
 
     @property
     def is_admin(self):
-        return self.role == 'ADMIN'
+        return self.role == 'admin'
 
     @property
     def is_user(self):
-        return self.role == 'USER'
+        return self.role == 'user'

@@ -1,8 +1,9 @@
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets, generics
+from django_filters.rest_framework import DjangoFilterBackend
 
-from .filters import MyModelFilter
+from .filters import AdFilter
 from .models import Ad, Comment
 from .paginators import AdPaginator
 from .permissions import IsOwner, IsAdmin
@@ -14,8 +15,8 @@ class AdViewSet(ModelViewSet):
 
     default_serializer = AdSerializer
     queryset = Ad.objects.all()
-    # filter_backends = [MyModelFilter]
-    # search_fields = ['title']
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = AdFilter
 
     serializer_class = AdSerializer
     serializer_classes = {
@@ -56,6 +57,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
+        """ Получаем комментарии по id объявления """
+
         ad_id = self.kwargs['ads_pk']
         return Comment.objects.filter(ad_id=ad_id)
 
