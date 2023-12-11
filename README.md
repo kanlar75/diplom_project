@@ -51,7 +51,7 @@ Frontend проекта реализован на React (папка frontend_rea
 Для миграции в базу данных используйте команду: python manage.py migrate
 
 Для первичного заполнения базы данных объявлениями, комментариями и пользователями из фикстур:
-python manage.py loadall
+python manage.py loadall.
 Или для создания только суперпользователя и пользователей используйте команду: 
 python manage.py create_users
 
@@ -88,5 +88,4 @@ login: admin@test.com password: 111
 
 
 Если у вас возникли вопросы или проблемы при использовании проекта, 
-свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий 
-в Issues проекта на GitHub https://github.com/kanlar75/diplom_project/issues.
+свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий.
