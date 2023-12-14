@@ -1,6 +1,6 @@
 FROM python:3.11
 
-WORKDIR /skymarket
+WORKDIR /app
 
 COPY ./requirements.txt .
 
@@ -9,6 +9,5 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONUNBUFFERED=1
 
-COPY ./skymarket/. .
+COPY . .
 
-COPY .env .

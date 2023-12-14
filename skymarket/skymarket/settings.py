@@ -15,7 +15,7 @@ DEBUG = True
 
 ENV_TYPE = os.getenv('ENV_TYPE')
 if ENV_TYPE == 'local' or ENV_TYPE == 'docker':
-    ALLOWED_host = ['localhost', '127.0.0.1']
+    ALLOWED_HOST = ['localhost', '127.0.0.1']
 elif ENV_TYPE == 'no_local' or ENV_TYPE == 'docker_deploy':
     ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
@@ -59,7 +59,7 @@ ROOT_URLCONF = "skymarket.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'frontend_react')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -100,19 +100,19 @@ DJOSER = {
         "user_delete": "users.serializers.CurrentUserSerializer",
     },
 }
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000",
-    "http://localhost:3000",
-    "http://localhost:8000",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000",
-    "http://localhost:3000",
-    "http://localhost:8000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://127.0.0.1:3000",
+#     "http://127.0.0.1:8000",
+#     "http://localhost:3000",
+#     "http://localhost:8000",
+# ]
+#
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://127.0.0.1:3000",
+#     "http://127.0.0.1:8000",
+#     "http://localhost:3000",
+#     "http://localhost:8000",
+# ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -173,6 +173,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 STATIC_URL = "/django_static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "django_static")

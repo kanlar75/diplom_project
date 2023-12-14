@@ -19,7 +19,7 @@ class AdTestCase(APITestCase):
             title='test',
             description='test',
             price=1000,
-            user=self.user
+            author=self.user
         )
 
         self.client.force_authenticate(user=self.user)
@@ -43,7 +43,7 @@ class AdTestCase(APITestCase):
         data = {
             "title": "Test_ad",
             "price": 1500,
-            "user": 1,
+            "author": 1,
             "description": "test_ad",
 
         }
@@ -64,7 +64,7 @@ class AdTestCase(APITestCase):
         user = User.objects.create(email='test2@test.com',
                                    password='08030803A', role='User')
         Ad.objects.create(title="Test list", price=1000,
-                          description="test list", user=user)
+                          description="test list", author=user)
         response = self.client.get(
             '/api/ads/'
         )
@@ -87,7 +87,7 @@ class AdTestCase(APITestCase):
         token = user_response.data['access']
 
         Ad.objects.create(title="Test update", price=1500,
-                          description="test_update", user=user)
+                          description="test_update", author=user)
 
         data = {
             "title": "Test update update",
@@ -131,7 +131,7 @@ class CommentTestCase(APITestCase):
             title='test',
             description='test',
             price=1000,
-            user=self.user
+            author=self.user
         )
 
         self.client.force_authenticate(user=self.user)
@@ -153,7 +153,8 @@ class CommentTestCase(APITestCase):
 
         token = user_response.data['access']
 
-        Ad.objects.create(title="test_ad", price=1500, description="test_ad", user=user)
+        Ad.objects.create(title="test_ad", price=1500, description="test_ad",
+                          author=user)
         data = {
             "text": "comment",
         }
@@ -184,9 +185,10 @@ class CommentTestCase(APITestCase):
 
         token = user_response.data['access']
 
-        ad = Ad.objects.create(title="test_ad", price=1500, description="test_ad",
-                          user=user)
-        Comment.objects.create(text="comment_list", ad=ad, user=user)
+        ad = Ad.objects.create(title="test_ad", price=1500,
+                               description="test_ad",
+                               author=user)
+        Comment.objects.create(text="comment_list", ad=ad, author=user)
 
         response = self.client.get(
             '/api/ads/8/comments/',
@@ -212,9 +214,10 @@ class CommentTestCase(APITestCase):
 
         token = user_response.data['access']
 
-        ad = Ad.objects.create(title="test_ad", price=1500, description="test_ad",
-                          user=user)
-        com = Comment.objects.create(text="comment", ad=ad, user=user)
+        ad = Ad.objects.create(title="test_ad", price=1500,
+                               description="test_ad",
+                               author=user)
+        com = Comment.objects.create(text="comment", ad=ad, author=user)
 
         data = {
             "text": "comment_update"

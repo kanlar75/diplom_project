@@ -2,38 +2,74 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:12.4-alpine
     container_name: postgres
     restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      PGDATA: /var/lib/postgresql/data/pgdata
+#      PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     ports:
-      - '5433:5432'
-    volumes:
-      - pg_data:/var/lib/postgresql/data/pgdata
+      - '5432:5432'
+    networks:
+      myNetwork:
     healthcheck:
       test: [ 'CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}' ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  frontend:
+    build: ./frontend_react/.
+    container_name: frontend
+    networks:
+      myNetwork:
+    volumes:
+      - frontend:/app/build
+    depends_on:
+      - db
+      - backend
 
-  app:
-    build: .
-    container_name: ads
+  nginx:
+    image: nginx:1.19.3
+    container_name: nginx
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+    volumes:
+      - ./skymarket/django_static/:/usr/share/nginx/html/django_static/
+      - ./skymarket/django_media/:/usr/share/nginx/html/django_media/
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - frontend:/usr/share/nginx/html/
+    restart: always
+    depends_on:
+      - db
+      - frontend
+      - backend
+
+  backend:
+    build: ./skymarket
+    container_name: backend
+    restart: always
     env_file:
       - .env
     command: >
       sh -c "python manage.py migrate && python manage.py loadall && python manage.py runserver 0.0.0.0:8000"
     ports:
-      - '8000:8000'
+      - '8001:8000'
+    networks:
+      myNetwork:
     depends_on:
       db:
         condition: service_healthy
 
 volumes:
-  pg_data:
+  postgres_data:
+  frontend:
+networks:
+  myNetwork:
+

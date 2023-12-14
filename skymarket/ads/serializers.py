@@ -11,7 +11,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class AdSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Ad
@@ -23,4 +23,4 @@ class AdDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ad
-        fields = ('title', 'price', 'image', 'description', 'user', 'comment',)
+        fields = ('title', 'price', 'image', 'description', 'author', 'comment',)

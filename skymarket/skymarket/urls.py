@@ -8,7 +8,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, \
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
-
 schema_view = get_schema_view(
     openapi.Info(
         title="API Documentation",
@@ -22,22 +21,26 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-urlpatterns = [
-                  path("api/admin/", admin.site.urls),
-                  path("api/redoc-tasks/", include("redoc.urls")),
+urlpatterns = ([
+    path("api/admin/", admin.site.urls),
+    path("api/redoc-tasks/", include("redoc.urls")),
 
-                  path("api/", include('users.urls')),
-                  path('api/', include('ads.urls')),
+    path("api/", include('users.urls')),
+    path('api/', include('ads.urls')),
 
-                  path('api/token/', TokenObtainPairView.as_view(),
-                       name='token_obtain_pair'),
-                  path('api/refresh/', TokenRefreshView.as_view(),
-                       name='token_refresh'),
+    path('api/token/', TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('api/refresh/', TokenRefreshView.as_view(),
+         name='token_refresh'),
 
-                  path('api/swagger/',
-                       schema_view.with_ui('swagger', cache_timeout=0),
-                       name='schema-swagger-ui'),
-                  path('api/redoc/',
-                       schema_view.with_ui('redoc', cache_timeout=0),
-                       name='schema-redoc'),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('api/swagger/',
+         schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
+    path('api/redoc/',
+         schema_view.with_ui('redoc', cache_timeout=0),
+         name='schema-redoc')
+])
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

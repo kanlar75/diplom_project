@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets, generics
@@ -8,6 +9,10 @@ from .models import Ad, Comment
 from .paginators import AdPaginator
 from .permissions import IsOwner, IsAdmin
 from .serializers import AdSerializer, CommentSerializer, AdDetailSerializer
+
+
+def index(request):
+    return render(request, 'frontend_react/public/index.html')
 
 
 class AdViewSet(ModelViewSet):
@@ -31,12 +36,12 @@ class AdViewSet(ModelViewSet):
     def perform_create(self, serializer):
         """ Создание нового объявление и установка автора """
 
-        serializer.save(user=self.request.user)
+        serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
         """ Обновление (редактирование) объявления """
 
-        serializer.save(user=self.request.user)
+        serializer.save(author=self.request.user)
 
     def get_permissions(self):
         """ Определяет права доступа в зависимости от выполняемого действия """
@@ -67,12 +72,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         ad_id = self.kwargs['ads_pk']
         ad = Ad.objects.get(pk=ad_id)
-        serializer.save(ad=ad, user=self.request.user)
+        serializer.save(ad=ad, author=self.request.user)
 
     def perform_update(self, serializer):
         """ Обновление комментария """
 
-        serializer.save(user=self.request.user)
+        serializer.save(author=self.request.user)
 
     def get_permissions(self):
         """ Определяет права доступа в зависимости от выполняемого действия """
@@ -93,8 +98,6 @@ class UserAdsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-
         if self.request.user.role == 'admin':
             return Ad.objects.all()
-        return Ad.objects.filter(user=self.request.user)
-
+        return Ad.objects.filter(author=self.request.user)
