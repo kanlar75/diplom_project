@@ -28,7 +28,7 @@ function App() {
     };
 
     const handleCloseByOverlay = (evt) => {
-      //обработчик для закртия popup по кнопке и overlay
+      //обработчик для закрытия popup по кнопке и overlay
       if (
         evt.target.classList.contains("popup_is-opened") ||
         evt.target.classList.contains("popup")
