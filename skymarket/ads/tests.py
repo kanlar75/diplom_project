@@ -27,12 +27,9 @@ class AdTestCase(APITestCase):
     def test_create_ad(self):
         """ Тест создания объявления """
 
-        user = User.objects.create(email='test1@test.com', role='User')
-        user.set_password('08030803A')
-        user.save()
         data = {
-            "email": "test1@test.com",
-            "password": "08030803A"
+            "email": "test@test.com",
+            "password": "12345"
         }
         user_response = self.client.post(
             "/api/token/",
@@ -63,10 +60,8 @@ class AdTestCase(APITestCase):
     def test_list_ad(self):
         """ Тест вывода списка объявлений """
 
-        user = User.objects.create(email='test2@test.com',
-                                   password='08030803A', role='User')
         Ad.objects.create(title="Test list", price=1000,
-                          description="test list", author=user)
+                          description="test list", author=self.user)
         response = self.client.get(
             '/api/ads/'
         )
@@ -75,12 +70,9 @@ class AdTestCase(APITestCase):
     def test_update_ad(self):
         """ Тест обновления объявления """
 
-        user = User.objects.create(email='test3@test.com')
-        user.set_password('08030803A')
-        user.save()
         data = {
-            "email": "test3@test.com",
-            "password": "08030803A"
+            "email": "test@test.com",
+            "password": "12345"
         }
         user_response = self.client.post(
             "/api/token/",
@@ -89,7 +81,7 @@ class AdTestCase(APITestCase):
         token = user_response.data['access']
 
         Ad.objects.create(title="Test update", price=1500,
-                          description="test_update", author=user)
+                          description="test_update", author=self.user)
 
         data = {
             "title": "Test update update",
@@ -170,9 +162,6 @@ class CommentTestCase(APITestCase):
     def test_list_comment(self):
         """ Тест вывода списка комментариев """
 
-        user = User.objects.create(email='test5@test.com', role='User')
-        user.set_password('08030803A')
-        user.save()
         data = {
             "email": "test@test.com",
             "password": "12345"
@@ -186,8 +175,8 @@ class CommentTestCase(APITestCase):
 
         ad = Ad.objects.create(title="test_ad", price=1500,
                                description="test_ad",
-                               author=user)
-        Comment.objects.create(text="comment_list", ad=ad, author=user)
+                               author=self.user)
+        Comment.objects.create(text="comment_list", ad=ad, author=self.user)
 
         response = self.client.get(
             '/api/ads/8/comments/',
