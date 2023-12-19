@@ -40,7 +40,7 @@ services:
     networks:
       myNetwork:
     ports:
-      - "8000:8000"
+      - "8001:8000"
       - "3000:3000"
     volumes:
       - ./skymarket/django_static/:/usr/share/nginx/html/django_static/
@@ -62,7 +62,7 @@ services:
     command: >
       sh -c "python manage.py migrate && python manage.py loadall && python manage.py runserver 0.0.0.0:8000"
     ports:
-      - '8001:8000'
+      - '8000:8000'
     networks:
       myNetwork:
     depends_on:
