@@ -5,13 +5,15 @@ services:
     image: postgres:12.4-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../skymarket/.env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 080374
-      POSTGRES_DB: skymarket_docker
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
     ports:
-    - "5432:5432"
+    - "5433:5432"
 
   frontend:
     build: ../frontend_react/.

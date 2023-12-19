@@ -45,7 +45,7 @@
     "model": "users.user",
     "pk": 4,
     "fields": {
-      "email": "user44@test.com",
+      "email": "user4@test.com",
       "password": "pbkdf2_sha256$260000$3bo3p1RBL9USUYt4njQGst$VABz0+ssAtcd6WS4s8Uf55iOlu0vLcyb9mAOPwfc9nU=",
       "last_login": "2022-02-20 13:34:16.332479+03:00",
       "phone": "+79217777788",

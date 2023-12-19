@@ -14,11 +14,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ENV_TYPE = os.getenv('ENV_TYPE')
-if ENV_TYPE == 'local' or ENV_TYPE == 'docker':
-    ALLOWED_HOST = ['localhost', '127.0.0.1']
-elif ENV_TYPE == 'no_local' or ENV_TYPE == 'docker_deploy':
-    ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
-
+# if ENV_TYPE == 'local' or ENV_TYPE == 'docker':
+#     ALLOWED_HOST = ['localhost', '127.0.0.1']
+# elif ENV_TYPE == 'no_local' or ENV_TYPE == 'docker_deploy':
+#     ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
+ALLOWED_HOST = ['*']
 # Application definition
 
 
@@ -100,19 +100,15 @@ DJOSER = {
         "user_delete": "users.serializers.CurrentUserSerializer",
     },
 }
-# CORS_ALLOWED_ORIGINS = [
-#     "http://127.0.0.1:3000",
-#     "http://127.0.0.1:8000",
-#     "http://localhost:3000",
-#     "http://localhost:8000",
-# ]
-#
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://127.0.0.1:3000",
-#     "http://127.0.0.1:8000",
-#     "http://localhost:3000",
-#     "http://localhost:8000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -192,6 +188,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+# EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")

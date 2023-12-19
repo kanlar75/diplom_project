@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets, generics
@@ -11,10 +10,6 @@ from .permissions import IsOwner, IsAdmin
 from .serializers import AdSerializer, CommentSerializer, AdDetailSerializer
 
 
-def index(request):
-    return render(request, 'frontend_react/public/index.html')
-
-
 class AdViewSet(ModelViewSet):
     """ ViewSet объявления """
 
@@ -22,7 +17,6 @@ class AdViewSet(ModelViewSet):
     queryset = Ad.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AdFilter
-
     serializer_class = AdSerializer
     serializer_classes = {
         "retrieve": AdDetailSerializer
@@ -47,12 +41,13 @@ class AdViewSet(ModelViewSet):
         """ Определяет права доступа в зависимости от выполняемого действия """
 
         if self.action in ['retrieve', 'create']:
-            permission_classes = [IsAuthenticated]
+            self.permission_classes = [IsAuthenticated]
         elif self.action in ['destroy', 'update', 'partial_update']:
-            permission_classes = [IsOwner | IsAdmin]
+            self.permission_classes = [IsOwner]
         else:
-            permission_classes = [AllowAny]
-        return [permission() for permission in permission_classes]
+            self.permission_classes = [AllowAny]
+
+        return super(AdViewSet, self).get_permissions()
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -83,12 +78,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         """ Определяет права доступа в зависимости от выполняемого действия """
 
         if self.action in ['retrieve', 'create']:
-            permission_classes = [IsAuthenticated]
+            self.permission_classes = [IsAuthenticated]
         elif self.action in ['destroy', 'update', 'partial_update']:
-            permission_classes = [IsAuthenticated, IsOwner | IsAdmin]
+            self.permission_classes = [IsOwner]
         else:
-            permission_classes = [AllowAny]
-        return [permission() for permission in permission_classes]
+            self.permission_classes = [AllowAny]
+
+        return super(CommentViewSet, self).get_permissions()
 
 
 class UserAdsListView(generics.ListAPIView):

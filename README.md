@@ -42,7 +42,7 @@ coverage report
 
 Документация доступна по адресам: 
 http://127.0.0.1:8000/api/redoc-tasks/ # Frontend
-http://127.0.0.1:8000/api/redoc/ # Бэкэнд 
+http://127.0.0.1:8000/api/redoc/ # Backend 
 http://127.0.0.1:8000/api/swagger/ # Swagger
 
 ЗАПУСК ПРОЕКТА ЛОКАЛЬНО.

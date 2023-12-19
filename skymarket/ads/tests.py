@@ -57,6 +57,8 @@ class AdTestCase(APITestCase):
 
         self.assertTrue(Ad.objects.all().count() > 0)
         self.assertEqual(response.json()["description"], "test_ad")
+        self.assertEqual(str(Ad.objects.get(pk=2)), "Test_ad")
+        self.assertEqual(str(Ad.objects.get(pk=2).author), "test@test.com")
 
     def test_list_ad(self):
         """ Тест вывода списка объявлений """
@@ -139,12 +141,9 @@ class CommentTestCase(APITestCase):
     def test_create_comment(self):
         """ Тест создания комментария """
 
-        user = User.objects.create(email='test5@test.com', role='User')
-        user.set_password('08030803A')
-        user.save()
         data = {
-            "email": "test5@test.com",
-            "password": "08030803A"
+            "email": "test@test.com",
+            "password": "12345"
         }
         user_response = self.client.post(
             "/api/token/",
@@ -154,7 +153,7 @@ class CommentTestCase(APITestCase):
         token = user_response.data['access']
 
         Ad.objects.create(title="test_ad", price=1500, description="test_ad",
-                          author=user)
+                          author=self.user)
         data = {
             "text": "comment",
         }
@@ -165,8 +164,8 @@ class CommentTestCase(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         self.assertTrue(Ad.objects.all().count() > 0)
+        self.assertEqual(str(Comment.objects.get(ad=7)), "comment")
 
     def test_list_comment(self):
         """ Тест вывода списка комментариев """
@@ -175,8 +174,8 @@ class CommentTestCase(APITestCase):
         user.set_password('08030803A')
         user.save()
         data = {
-            "email": "test5@test.com",
-            "password": "08030803A"
+            "email": "test@test.com",
+            "password": "12345"
         }
         user_response = self.client.post(
             "/api/token/",
@@ -200,13 +199,11 @@ class CommentTestCase(APITestCase):
     def test_update_comment(self):
         """ Тест обновления комментария """
 
-        user = User.objects.create(email='test5@test.com', role='User')
-        user.set_password('08030803A')
-        user.save()
         data = {
-            "email": "test5@test.com",
-            "password": "08030803A"
+            "email": "test@test.com",
+            "password": "12345"
         }
+
         user_response = self.client.post(
             "/api/token/",
             data=data
@@ -216,8 +213,8 @@ class CommentTestCase(APITestCase):
 
         ad = Ad.objects.create(title="test_ad", price=1500,
                                description="test_ad",
-                               author=user)
-        com = Comment.objects.create(text="comment", ad=ad, author=user)
+                               author=self.user)
+        Comment.objects.create(text="comment", ad=ad, author=self.user)
 
         data = {
             "text": "comment_update"
@@ -243,3 +240,4 @@ class CommentTestCase(APITestCase):
         User.objects.all().delete()
         Ad.objects.all().delete()
         return super().tearDown()
+
