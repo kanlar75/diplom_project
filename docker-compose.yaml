@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ../../AppData/Roaming/JetBrains/PyCharmCE2023.2/scratches/.env
+      - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -58,7 +58,7 @@ services:
     container_name: backend_
     restart: always
     env_file:
-      - ../../AppData/Roaming/JetBrains/PyCharmCE2023.2/scratches/.env
+      - .env
     command: >
       sh -c "python manage.py migrate && python manage.py loadall && python manage.py runserver 0.0.0.0:8000"
     ports:
