@@ -81,7 +81,9 @@ login: admin@test.com password: 111
 Клонируйте проект.
 Установите docker и при необходимости docker-compose.
 Пропишите переменные окружения в файл .env. 
-Перейдите в каталог skymarket, там находится docker-compose файл backend части. 
+
+Перейдите в каталог skymarket, там находится docker-compose файл backend части.
+
 Создайте образ командой:
 docker-compose build
 
@@ -98,6 +100,8 @@ login: admin@test.com password: 111
 Первоначальное заполнение базы данных выполняется из фикстур.
 Для всех пользователей (user1@test.com, user2@test.com, user3@test.com, user4@test.com) password: 111.
 
+В папке market_postgres находится docker-compose файл frontend части. 
+Запуск аналогично backend.
 
 Если у вас возникли вопросы или проблемы при использовании проекта, 
 свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий.
