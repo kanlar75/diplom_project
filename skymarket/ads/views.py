@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import AdFilter
 from .models import Ad, Comment
 from .paginators import AdPaginator
-from .permissions import IsOwner, IsAdmin
+from .permissions import IsOwner
 from .serializers import AdSerializer, CommentSerializer, AdDetailSerializer
 
 

@@ -59,7 +59,8 @@ http://127.0.0.1:8000/api/swagger/ # Swagger
 Используемые в проекте переменные окружения записаны в файле .env.sample.
 Для локального запуска установите ENV_TYPE='local'
 
-Для миграции в базу данных используйте команду: python manage.py migrate
+Для миграции в базу данных используйте команду: 
+python manage.py migrate
 
 Для первичного заполнения базы данных объявлениями, комментариями и пользователями из фикстур:
 python manage.py loadall.
@@ -81,6 +82,8 @@ login: admin@test.com password: 111
 Установите docker и при необходимости docker-compose.
 Пропишите переменные окружения в файл .env. 
 
+Перейдите в каталог skymarket, там находится docker-compose файл backend части.
+
 Создайте образ командой:
 docker-compose build
 
@@ -97,6 +100,8 @@ login: admin@test.com password: 111
 Первоначальное заполнение базы данных выполняется из фикстур.
 Для всех пользователей (user1@test.com, user2@test.com, user3@test.com, user4@test.com) password: 111.
 
+В папке market_postgres находится docker-compose файл frontend части. 
+Запуск аналогично backend.
 
 Если у вас возникли вопросы или проблемы при использовании проекта, 
 свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий.
