@@ -101,7 +101,11 @@ login: admin@test.com password: 111
 Для всех пользователей (user1@test.com, user2@test.com, user3@test.com, user4@test.com) password: 111.
 
 В папке market_postgres находится docker-compose файл frontend части. 
-Запуск аналогично backend.
+Запуск аналогично backend. Запускается по адресу: http://127.0.0.1:3000/
+
+В корневом каталоге /diplom_project/ находится docker-compose файл для запуска всех
+контейнеров проекта.
+Команда для запуска: docker-compose up --build
 
 Если у вас возникли вопросы или проблемы при использовании проекта, 
 свяжитесь со мной по электронной почте kls75@yandex.ru или оставьте комментарий.
